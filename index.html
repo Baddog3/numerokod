@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Нумерология онлайн — бесплатные калькуляторы | numerokod.ru</title>
+  <meta name="description" content="Бесплатные нумерологические калькуляторы онлайн. Рассчитайте число судьбы, число имени и совместимость по дате рождения.">
+  <meta name="keywords" content="нумерология онлайн, нумерология бесплатно, нумерологический калькулятор, число судьбы">
+  <link rel="canonical" href="https://numerokod.ru/">
+  <meta property="og:title" content="Нумерология онлайн — numerokod.ru">
+  <meta property="og:description" content="Бесплатные нумерологические расчёты онлайн">
+  <meta property="og:url" content="https://numerokod.ru/">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-symbol">✦</span>
+        <span>numerokod</span>
+      </a>
+      <nav class="main-nav">
+        <button class="menu-toggle" aria-label="Меню">
+          <span></span><span></span><span></span>
+        </button>
+        <ul>
+          <li><a href="#kalkulyatory">Калькуляторы</a></li>
+          <li><a href="stati/index.html">Статьи</a></li>
+          <li><a href="stati/chto-takoe-numerologiya.html">О нумерологии</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Узнай своё число судьбы</h1>
+        <p class="hero-subtitle">Бесплатные нумерологические расчёты — просто введи дату рождения</p>
+
+        <div class="hero-calculator card">
+          <form id="hero-calc-form">
+            <div class="form-group">
+              <label for="hero-date">Дата рождения</label>
+              <input type="date" id="hero-date" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-block">Рассчитать</button>
+          </form>
+          <div id="hero-result" class="result-block">
+            <div class="result-number"></div>
+            <div class="result-title"></div>
+            <p class="result-text"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="kalkulyatory">
+      <div class="container">
+        <div class="section-title">
+          <h2>Все калькуляторы</h2>
+        </div>
+        <div class="grid-3">
+          <div class="card calc-card">
+            <div class="calc-card-icon">🔢</div>
+            <h3>Число судьбы</h3>
+            <p>Узнайте своё число по дате рождения и его значение</p>
+            <a href="kalkulyatory/chislo-sudby.html" class="btn">Рассчитать</a>
+          </div>
+          <div class="card calc-card">
+            <div class="calc-card-icon">🔤</div>
+            <h3>Число имени</h3>
+            <p>Рассчитайте число по полному имени и фамилии</p>
+            <a href="kalkulyatory/chislo-imeni.html" class="btn">Рассчитать</a>
+          </div>
+          <div class="card calc-card">
+            <div class="calc-card-icon">💞</div>
+            <h3>Совместимость</h3>
+            <p>Проверьте нумерологическую совместимость пары</p>
+            <a href="kalkulyatory/sovmestimost.html" class="btn">Рассчитать</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Узнай больше о нумерологии</h2>
+        </div>
+        <div class="grid-4">
+          <article class="card article-card">
+            <h3><a href="stati/chto-takoe-numerologiya.html">Что такое нумерология</a></h3>
+            <p class="article-date">15 января 2024</p>
+            <p>История древней науки о числах, её основы и принципы. Узнайте, как числа влияют на судьбу человека.</p>
+            <a href="stati/chto-takoe-numerologiya.html">Читать →</a>
+          </article>
+          <article class="card article-card">
+            <h3><a href="stati/chislo-sudby-znachenie.html">Число судьбы: значения</a></h3>
+            <p class="article-date">20 января 2024</p>
+            <p>Подробное описание чисел судьбы от 1 до 9 и мастер-чисел 11, 22, 33. Характер и предназначение.</p>
+            <a href="stati/chislo-sudby-znachenie.html">Читать →</a>
+          </article>
+          <article class="card article-card">
+            <h3><a href="stati/chisla-1-9-znachenie.html">Значение чисел 1–9</a></h3>
+            <p class="article-date">1 февраля 2024</p>
+            <p>Полное руководство по значению каждого числа в нумерологии. Энергия, символика и влияние на жизнь.</p>
+            <a href="stati/chisla-1-9-znachenie.html">Читать →</a>
+          </article>
+          <article class="card article-card">
+            <h3><a href="stati/kak-rasschitat-chislo-imeni.html">Как рассчитать число имени</a></h3>
+            <p class="article-date">10 февраля 2024</p>
+            <p>Пошаговая инструкция расчёта числа имени по системе Пифагора. Таблица букв и примеры.</p>
+            <a href="stati/kak-rasschitat-chislo-imeni.html">Читать →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-links">
+        <a href="#">Политика конфиденциальности</a>
+        <a href="stati/chto-takoe-numerologiya.html">О сайте</a>
+      </div>
+      <p class="footer-copy">© 2024 numerokod.ru</p>
+      <p class="footer-disclaimer">Сайт носит информационно-развлекательный характер</p>
+    </div>
+  </footer>
+
+  <script src="js/calculators.js"></script>
+</body>
+</html>
