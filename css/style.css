@@ -247,6 +247,16 @@ img {
   color: var(--text-secondary);
 }
 
+.form-control-error {
+  border-color: #e57373;
+}
+
+.form-error {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #e57373;
+}
+
 /* Hero */
 .hero {
   padding: 3rem 0 2rem;

@@ -53,7 +53,7 @@ const numberDescriptions = {
   },
   7: {
     name: 'Мудрец',
-    text: 'Семёрка — число мудрости и познания. Люди с числом 7 стремятся к глубокому пониманию жизни, духовному развитию и поиску истины. Они аналитичны, интросpectивны и обладают развитой интуицией. Семёрки часто увлекаются наукой, философией, эзотерикой, исследовательской деятельностью. Им нужно время в одиночестве для размышлений. Они ценят качество превыше количества — как в отношениях, так и в работе. Однако склонность к изоляции может приводить к отчуждённости и недоверию. Семёркам важно делиться своими открытиями с миром. В любви они ищут глубокую духовную связь, а не поверхностные отношения. Их жизненный путь — через познание, медитацию и обретение внутренней мудрости.'
+    text: 'Семёрка — число мудрости и познания. Люди с числом 7 стремятся к глубокому пониманию жизни, духовному развитию и поиску истины. Они аналитичны, интроспективны и обладают развитой интуицией. Семёрки часто увлекаются наукой, философией, эзотерикой, исследовательской деятельностью. Им нужно время в одиночестве для размышлений. Они ценят качество превыше количества — как в отношениях, так и в работе. Однако склонность к изоляции может приводить к отчуждённости и недоверию. Семёркам важно делиться своими открытиями с миром. В любви они ищут глубокую духовную связь, а не поверхностные отношения. Их жизненный путь — через познание, медитацию и обретение внутренней мудрости.'
   },
   8: {
     name: 'Властелин',
@@ -160,6 +160,45 @@ function getShortDescription(num) {
   return sentences.slice(0, 2).join('. ') + '.';
 }
 
+const CYRILLIC_NAME_RE = /[А-Яа-яЁё]/;
+
+function validateName(name) {
+  const trimmed = name.trim();
+  if (!trimmed) {
+    return 'Введите имя';
+  }
+  if (!CYRILLIC_NAME_RE.test(trimmed)) {
+    return 'Введите имя кириллицей (русский алфавит)';
+  }
+  const { breakdown } = calculateNameNumber(trimmed);
+  if (breakdown.length === 0) {
+    return 'В имени нет букв для расчёта. Используйте русский алфавит';
+  }
+  return null;
+}
+
+function showFieldError(input, message) {
+  clearFieldError(input);
+  const error = document.createElement('p');
+  error.className = 'form-error';
+  error.setAttribute('role', 'alert');
+  error.textContent = message;
+  input.classList.add('form-control-error');
+  input.after(error);
+}
+
+function clearFieldError(input) {
+  input.classList.remove('form-control-error');
+  const group = input.closest('.form-group');
+  if (group) {
+    group.querySelectorAll('.form-error').forEach((el) => el.remove());
+  }
+}
+
+function bindFieldErrorClear(input) {
+  input.addEventListener('input', () => clearFieldError(input));
+}
+
 function renderDestinyResult(container, dateString) {
   const num = calculateDestinyNumber(dateString);
   const desc = numberDescriptions[num];
@@ -181,6 +220,7 @@ function renderDestinyResult(container, dateString) {
 function renderNameResult(container, name) {
   const { number, breakdown } = calculateNameNumber(name);
   const desc = numberDescriptions[number];
+  if (!desc) return;
 
   const breakdownEl = container.querySelector('.letter-breakdown');
   if (breakdownEl) {
@@ -238,12 +278,20 @@ function initHeroCalculator() {
   const form = document.getElementById('hero-calc-form');
   if (!form) return;
 
+  const dateInput = form.querySelector('input[type="date"]');
+  const result = document.getElementById('hero-result');
+  bindFieldErrorClear(dateInput);
+
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const dateInput = form.querySelector('input[type="date"]');
-    if (!dateInput.value) return;
+    clearFieldError(dateInput);
 
-    const result = document.getElementById('hero-result');
+    if (!dateInput.value) {
+      showFieldError(dateInput, 'Укажите дату рождения');
+      result.classList.remove('visible');
+      return;
+    }
+
     const num = calculateDestinyNumber(dateInput.value);
     const desc = numberDescriptions[num];
 
@@ -258,11 +306,21 @@ function initDestinyCalculator() {
   const form = document.getElementById('destiny-calc-form');
   if (!form) return;
 
+  const dateInput = form.querySelector('input[type="date"]');
+  const result = document.getElementById('destiny-result');
+  bindFieldErrorClear(dateInput);
+
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const dateInput = form.querySelector('input[type="date"]');
-    if (!dateInput.value) return;
-    renderDestinyResult(document.getElementById('destiny-result'), dateInput.value);
+    clearFieldError(dateInput);
+
+    if (!dateInput.value) {
+      showFieldError(dateInput, 'Укажите дату рождения');
+      result.classList.remove('visible');
+      return;
+    }
+
+    renderDestinyResult(result, dateInput.value);
   });
 }
 
@@ -270,11 +328,22 @@ function initNameCalculator() {
   const form = document.getElementById('name-calc-form');
   if (!form) return;
 
+  const nameInput = form.querySelector('input[type="text"]');
+  const result = document.getElementById('name-result');
+  bindFieldErrorClear(nameInput);
+
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const nameInput = form.querySelector('input[type="text"]');
-    if (!nameInput.value.trim()) return;
-    renderNameResult(document.getElementById('name-result'), nameInput.value);
+    clearFieldError(nameInput);
+
+    const error = validateName(nameInput.value);
+    if (error) {
+      showFieldError(nameInput, error);
+      result.classList.remove('visible');
+      return;
+    }
+
+    renderNameResult(result, nameInput.value);
   });
 }
 
@@ -282,28 +351,54 @@ function initCompatCalculator() {
   const form = document.getElementById('compat-calc-form');
   if (!form) return;
 
+  const name1Input = form.querySelector('#person1-name');
+  const name2Input = form.querySelector('#person2-name');
+  const result = document.getElementById('compat-result');
+  bindFieldErrorClear(name1Input);
+  bindFieldErrorClear(name2Input);
+
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const name1 = form.querySelector('#person1-name').value.trim();
+    clearFieldError(name1Input);
+    clearFieldError(name2Input);
+
+    const name1 = name1Input.value;
     const date1 = form.querySelector('#person1-date').value;
-    const name2 = form.querySelector('#person2-name').value.trim();
+    const name2 = name2Input.value;
     const date2 = form.querySelector('#person2-date').value;
 
-    if (!name1 || !date1 || !name2 || !date2) return;
+    const name1Error = validateName(name1);
+    if (name1Error) {
+      showFieldError(name1Input, name1Error);
+      result.classList.remove('visible');
+      return;
+    }
+
+    const name2Error = validateName(name2);
+    if (name2Error) {
+      showFieldError(name2Input, name2Error);
+      result.classList.remove('visible');
+      return;
+    }
+
+    if (!date1 || !date2) {
+      const dateInput = !date1
+        ? form.querySelector('#person1-date')
+        : form.querySelector('#person2-date');
+      showFieldError(dateInput, 'Укажите дату рождения');
+      result.classList.remove('visible');
+      return;
+    }
 
     const num1 = calculateDestinyNumber(date1);
     const num2 = calculateDestinyNumber(date2);
-    const nameNum1 = calculateNameNumber(name1).number;
-    const nameNum2 = calculateNameNumber(name2).number;
-    const avg1 = reduceToSingleDigit(num1 + nameNum1);
-    const avg2 = reduceToSingleDigit(num2 + nameNum2);
-    const compat = calculateCompatibility(avg1, avg2);
+    const compat = calculateCompatibility(num1, num2);
 
-    renderCompatResult(document.getElementById('compat-result'), {
-      person1: name1,
-      person2: name2,
-      num1: avg1,
-      num2: avg2,
+    renderCompatResult(result, {
+      person1: name1.trim(),
+      person2: name2.trim(),
+      num1,
+      num2,
       compat
     });
   });

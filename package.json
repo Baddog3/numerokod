@@ -1,0 +1,9 @@
+{
+  "name": "numerokod",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Нумерологический сайт numerokod.ru — статические калькуляторы и статьи",
+  "scripts": {
+    "test": "node --test tests/calculators.test.js"
+  }
+}
