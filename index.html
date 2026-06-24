@@ -31,11 +31,11 @@
   <header class="site-header">
     <div class="container header-inner">
       <a href="index.html" class="logo">
-        <span class="logo-symbol">✦</span>
+        <img class="logo-symbol" src="images/logo-symbol.svg" alt="" width="28" height="28">
         <span>numerokod</span>
       </a>
-      <nav class="main-nav">
-        <button class="menu-toggle" aria-label="Меню">
+      <nav class="main-nav" id="main-nav">
+        <button type="button" class="menu-toggle" aria-label="Меню" aria-expanded="false" aria-controls="main-nav">
           <span></span><span></span><span></span>
         </button>
         <ul>
@@ -49,9 +49,11 @@
 
   <main>
     <section class="hero">
-      <div class="container">
-        <h1>Узнай своё число судьбы</h1>
-        <p class="hero-subtitle">Бесплатные нумерологические расчёты — просто введи дату рождения</p>
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <h1>Узнай своё число судьбы</h1>
+          <p class="hero-subtitle">Бесплатные нумерологические расчёты — просто введи дату рождения</p>
+        </div>
 
         <div class="hero-calculator card">
           <form id="hero-calc-form">
@@ -77,19 +79,25 @@
         </div>
         <div class="grid-3">
           <div class="card calc-card">
-            <div class="calc-card-icon">🔢</div>
+            <div class="calc-card-icon" aria-hidden="true">
+              <img src="images/icons/destiny.svg" alt="" width="48" height="48">
+            </div>
             <h3>Число судьбы</h3>
             <p>Узнайте своё число по дате рождения и его значение</p>
             <a href="kalkulyatory/chislo-sudby.html" class="btn">Рассчитать</a>
           </div>
           <div class="card calc-card">
-            <div class="calc-card-icon">🔤</div>
+            <div class="calc-card-icon" aria-hidden="true">
+              <img src="images/icons/name.svg" alt="" width="48" height="48">
+            </div>
             <h3>Число имени</h3>
             <p>Рассчитайте число по полному имени и фамилии</p>
             <a href="kalkulyatory/chislo-imeni.html" class="btn">Рассчитать</a>
           </div>
           <div class="card calc-card">
-            <div class="calc-card-icon">💞</div>
+            <div class="calc-card-icon" aria-hidden="true">
+              <img src="images/icons/compatibility.svg" alt="" width="48" height="48">
+            </div>
             <h3>Совместимость</h3>
             <p>Проверьте нумерологическую совместимость пары</p>
             <a href="kalkulyatory/sovmestimost.html" class="btn">Рассчитать</a>
@@ -144,6 +152,8 @@
     </div>
   </footer>
 
+  <script src="js/metrika.js"></script>
+  <noscript><div><img src="https://mc.yandex.ru/watch/110129515" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
   <script src="js/calculators.js"></script>
 </body>
 </html>

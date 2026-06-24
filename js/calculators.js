@@ -199,12 +199,61 @@ function bindFieldErrorClear(input) {
   input.addEventListener('input', () => clearFieldError(input));
 }
 
+function prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function animateCountUp(element, target, duration = 600) {
+  const value = Number(target);
+  if (!Number.isFinite(value)) {
+    element.textContent = target;
+    return;
+  }
+
+  element.classList.remove('result-number-animate');
+  void element.offsetWidth;
+
+  if (prefersReducedMotion()) {
+    element.textContent = String(target);
+    return;
+  }
+
+  element.classList.add('result-number-animate');
+
+  const start = performance.now();
+  const tick = (now) => {
+    const progress = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    element.textContent = progress < 1 ? String(Math.round(value * eased)) : String(target);
+    if (progress < 1) {
+      requestAnimationFrame(tick);
+    }
+  };
+
+  element.textContent = '0';
+  requestAnimationFrame(tick);
+}
+
+function animateResultNumbers(container, selectors = '.result-number, .compat-num-item .num') {
+  container.querySelectorAll(selectors).forEach((element) => {
+    const target = element.dataset.animateTarget;
+    if (target !== undefined) {
+      animateCountUp(element, target);
+    }
+  });
+}
+
+function revealResultBlock(container, selectors) {
+  container.classList.add('visible');
+  animateResultNumbers(container, selectors);
+}
+
 function renderDestinyResult(container, dateString) {
   const num = calculateDestinyNumber(dateString);
   const desc = numberDescriptions[num];
   const { steps } = getDestinySteps(dateString);
 
-  container.querySelector('.result-number').textContent = num;
+  container.querySelector('.result-number').dataset.animateTarget = num;
   container.querySelector('.result-title').textContent = `Число судьбы — ${num}: ${desc.name}`;
   container.querySelector('.result-text').textContent = desc.text;
 
@@ -214,7 +263,7 @@ function renderDestinyResult(container, dateString) {
       steps.map(s => `<div class="formula-step">${s}</div>`).join('');
   }
 
-  container.classList.add('visible');
+  revealResultBlock(container);
 }
 
 function renderNameResult(container, name) {
@@ -229,33 +278,34 @@ function renderNameResult(container, name) {
     ).join('');
   }
 
-  container.querySelector('.result-number').textContent = number;
+  container.querySelector('.result-number').dataset.animateTarget = number;
   container.querySelector('.result-title').textContent = `Число имени — ${number}: ${desc.name}`;
   container.querySelector('.result-text').textContent = desc.text;
-  container.classList.add('visible');
+  revealResultBlock(container);
 }
 
 function renderCompatResult(container, data) {
   const { person1, person2, num1, num2, compat } = data;
 
-  container.querySelector('.person1-num').textContent = num1;
+  container.querySelector('.person1-num').dataset.animateTarget = num1;
   container.querySelector('.person1-label').textContent = person1;
-  container.querySelector('.person2-num').textContent = num2;
+  container.querySelector('.person2-num').dataset.animateTarget = num2;
   container.querySelector('.person2-label').textContent = person2;
-  container.querySelector('.result-number').textContent = compat.compatNumber;
+  container.querySelector('.result-number').dataset.animateTarget = compat.compatNumber;
   container.querySelector('.result-title').textContent = `Совместимость: ${compat.percent}%`;
   container.querySelector('.result-text').textContent = compat.text;
 
   const fill = container.querySelector('.progress-bar-fill');
   const percentEl = container.querySelector('.progress-percent');
   if (fill) {
+    fill.style.width = '0';
     setTimeout(() => { fill.style.width = compat.percent + '%'; }, 100);
   }
   if (percentEl) {
     percentEl.textContent = compat.percent + '%';
   }
 
-  container.classList.add('visible');
+  revealResultBlock(container);
 }
 
 function initMobileMenu() {
@@ -263,13 +313,25 @@ function initMobileMenu() {
   const nav = document.querySelector('.main-nav');
   if (!toggle || !nav) return;
 
+  const setMenuOpen = (open) => {
+    nav.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+
   toggle.addEventListener('click', () => {
-    nav.classList.toggle('open');
+    setMenuOpen(!nav.classList.contains('open'));
   });
 
   document.addEventListener('click', (e) => {
     if (!nav.contains(e.target) && !toggle.contains(e.target)) {
-      nav.classList.remove('open');
+      setMenuOpen(false);
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && nav.classList.contains('open')) {
+      setMenuOpen(false);
+      toggle.focus();
     }
   });
 }
@@ -295,10 +357,11 @@ function initHeroCalculator() {
     const num = calculateDestinyNumber(dateInput.value);
     const desc = numberDescriptions[num];
 
-    result.querySelector('.result-number').textContent = num;
+    const numEl = result.querySelector('.result-number');
+    numEl.dataset.animateTarget = num;
     result.querySelector('.result-title').textContent = `Число судьбы — ${num}: ${desc.name}`;
     result.querySelector('.result-text').textContent = getShortDescription(num);
-    result.classList.add('visible');
+    revealResultBlock(result);
   });
 }
 
